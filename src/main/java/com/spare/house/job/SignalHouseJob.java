@@ -25,9 +25,9 @@ import java.util.*;
  * spark的job每次执行的结果表必须是带日期后缀的
  * Created by dada on 2017/6/28.
  */
-public class LianjiaSignalHouseJob {
+public class SignalHouseJob {
 
-    private static Logger logger = LoggerFactory.getLogger(LianjiaSignalHouseJob.class);
+    private static Logger logger = LoggerFactory.getLogger(SignalHouseJob.class);
 
     public void start() {
         clearCollectionData("");
@@ -112,7 +112,7 @@ public class LianjiaSignalHouseJob {
     }
 
     public static void main(String[] args) {
-        LianjiaSignalHouseJob sparkMongoTest = new LianjiaSignalHouseJob();
+        SignalHouseJob sparkMongoTest = new SignalHouseJob();
         sparkMongoTest.start();
     }
 
