@@ -11,6 +11,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.bson.Document;
+import org.scalatest.Doc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
@@ -51,7 +52,14 @@ public class SignalHouseJob {
             result.setTitle(house.getString("title"));
             result.setTrendList(new ArrayList<>());
             HouseResult.Trend trend = result.new Trend();
-            trend.setDate(house.getString("gmtCreated"));
+            Object gmtCreated = house.get("gmtCreated");
+            if(gmtCreated instanceof String) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+                trend.setDate(simpleDateFormat.parse((String) gmtCreated));
+            } else if(gmtCreated instanceof Date) {
+                trend.setDate((Date) gmtCreated);
+            }
+//            trend.setDate(house.getString("gmtCreated"));
             trend.setPrice(house.getString("price"));
             result.getTrendList().add(trend);
             return result;
@@ -65,7 +73,7 @@ public class SignalHouseJob {
             Document document = new Document();
             document.put("title", houseResult.getTitle());
             document.put("houseLink", houseResult.getLink());
-            List<BasicDBObject> trends = new ArrayList<>();
+            List<Document> trends = new ArrayList<>();
             int previousPrice = 0;
             int trendSize = 0;
             if(! CollectionUtils.isEmpty(houseResult.getTrendList())) {
@@ -79,10 +87,14 @@ public class SignalHouseJob {
                     }
                     trendSize++;
                     previousPrice = curPrice;
-                    BasicDBObject obj = new BasicDBObject();
+                    Document obj = new Document();
                     obj.put("date", trend.getDate());
                     obj.put("price", trend.getPrice());
                     trends.add(obj);
+//                    BasicDBObject obj = new BasicDBObject();
+//                    obj.put("date", trend.getDate());
+//                    obj.put("price", trend.getPrice());
+//                    trends.add(obj);
                 }
             }
             document.put("trendSize", trendSize);

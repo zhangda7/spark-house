@@ -1,6 +1,7 @@
 package com.spare.house.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,15 +20,15 @@ public class HouseResult implements Serializable {
     public class Trend implements Serializable {
         private long serialVersionUID = 1L;
 
-        private String date;
+        private Date date;
 
         private String price;
 
-        public String getDate() {
+        public Date getDate() {
             return date;
         }
 
-        public void setDate(String date) {
+        public void setDate(Date date) {
             this.date = date;
         }
 
